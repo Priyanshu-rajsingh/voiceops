@@ -1,0 +1,3 @@
+# optional: demo web app (app.py) and dense multilingual embeddings (better Hinglish/Hindi retrieval)
+gradio>=4.44
+sentence-transformers>=3.0

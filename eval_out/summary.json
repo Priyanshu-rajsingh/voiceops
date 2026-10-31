@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "retrievers": [
+      "bm25",
+      "tfidf"
+    ],
+    "top_k": 8,
+    "question_text": "question",
+    "date": "2026-10-31T17:42:11"
+  },
+  "step1": {
+    "n": 52,
+    "pass_rate": 0.1731,
+    "decision_acc": 0.5385,
+    "fact_rate": 0.2308,
+    "safe_rate": 1.0,
+    "by_language": {
+      "en": {
+        "n": 33,
+        "pass_rate": 0.2424
+      },
+      "hi": {
+        "n": 8,
+        "pass_rate": 0.125
+      },
+      "hi-en": {
+        "n": 11,
+        "pass_rate": 0.0
+      }
+    },
+    "by_intent": {
+      "cancel_order": {
+        "n": 2,
+        "pass_rate": 0.5
+      },
+      "damaged_item": {
+        "n": 3,
+        "pass_rate": 0.0
+      },
+      "delivery_area": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "delivery_attempts": {
+        "n": 1,
+        "pass_rate": 0.0
+      },
+      "fraud": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "late_delivery": {
+        "n": 1,
+        "pass_rate": 0.0
+      },
+      "policy_override": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "refund_timeline": {
+        "n": 14,
+        "pass_rate": 0.0
+      },
+      "return_eligibility": {
+        "n": 4,
+        "pass_rate": 0.0
+      },
+      "return_fee": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "return_window": {
+        "n": 11,
+        "pass_rate": 0.1818
+      },
+      "troubleshooting": {
+        "n": 1,
+        "pass_rate": 0.0
+      },
+      "unsupported": {
+        "n": 5,
+        "pass_rate": 0.6
+      },
+      "warranty": {
+        "n": 5,
+        "pass_rate": 0.0
+      }
+    },
+    "errors": 0,
+    "seconds": 106.2
+  },
+  "step2": {
+    "n": 5,
+    "pass_rate": 0.6,
+    "decision_acc": 1.0,
+    "fact_rate": 0.6,
+    "safe_rate": 1.0,
+    "by_language": {
+      "en": {
+        "n": 3,
+        "pass_rate": 0.6667
+      },
+      "hi-en": {
+        "n": 2,
+        "pass_rate": 0.5
+      }
+    },
+    "by_intent": {
+      "refund_timeline": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "return_fee": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "unsupported": {
+        "n": 1,
+        "pass_rate": 0.0
+      },
+      "warranty": {
+        "n": 2,
+        "pass_rate": 0.5
+      }
+    },
+    "errors": 0,
+    "retrieval": {
+      "k": 8,
+      "n": 4,
+      "recall": 1.0,
+      "hit": 1.0,
+      "mrr": 1.0,
+      "hard_negative_first": 0.0
+    },
+    "seconds": 87.0
+  },
+  "step3_questions": {
+    "n": 5,
+    "pass_rate": 0.6,
+    "decision_acc": 1.0,
+    "fact_rate": 0.6,
+    "safe_rate": 1.0,
+    "by_language": {
+      "en": {
+        "n": 3,
+        "pass_rate": 1.0
+      },
+      "hi-en": {
+        "n": 2,
+        "pass_rate": 0.0
+      }
+    },
+    "by_intent": {
+      "refund_timeline": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "return_fee": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "unsupported": {
+        "n": 1,
+        "pass_rate": 1.0
+      },
+      "warranty": {
+        "n": 2,
+        "pass_rate": 0.0
+      }
+    },
+    "errors": 0,
+    "retrieval": {
+      "k": 8,
+      "n": 4,
+      "recall": 1.0,
+      "hit": 1.0,
+      "mrr": 1.0,
+      "hard_negative_first": 0.0
+    },
+    "seconds": 139.2
+  },
+  "conversations": {
+    "turns": 22,
+    "conversations": 5,
+    "turn_pass_rate": 0.8182,
+    "conversation_pass_rate": 0.6,
+    "decision_acc": 1.0,
+    "tool_acc": 1.0,
+    "fact_rate": 0.8182,
+    "safe_rate": 1.0,
+    "by_scenario": {
+      "high_value_damage": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "human_requested": {
+        "n": 8,
+        "pass_rate": 1.0
+      },
+      "return_eligibility": {
+        "n": 10,
+        "pass_rate": 0.6
+      }
+    },
+    "retrieval": {
+      "k": 8,
+      "n": 22,
+      "recall": 0.6439,
+      "hit": 0.7273,
+      "mrr": 0.3629,
+      "hard_negative_first": 0.0
+    },
+    "errors": 0,
+    "seconds": 686.8
+  }
+}

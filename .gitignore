@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.cache/
+outputs/
+test_audio/
+*.zip
+Capstone_Project_Dataset_FTTT_2026/
+.DS_Store
+.env.example

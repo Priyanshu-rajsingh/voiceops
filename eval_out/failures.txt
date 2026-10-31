@@ -1,0 +1,27 @@
+CONV PC003 t5 [return_eligibility] expected=answer got=answer tools_ok=True
+  missing: instant / 2 hours / turant / तुरंत / 2 ghante / दो घंटे | forbidden: 
+  tools expected:  | called: 
+  customer: Aur refund kitne din mein aayega?
+  reply: I’m sorry, I don’t have the exact refund processing time for returns. I can connect you with a human colleague who can provide the details.
+
+CONV PC004 t4 [return_eligibility] expected=answer got=answer tools_ok=True
+  missing: 2026-11-13 / 13 November 2026 / 13 नवंबर 2026 ; 49 | forbidden: 
+  tools expected:  | called: 
+  customer: क्या मैं UrbanThread Slim Fit Jeans वापस कर सकती हूँ?
+  reply: हाँ, आप UrbanThread Slim Fit Jeans को 28 अक्टूबर 2026 तक वापस कर सकती हैं, क्योंकि यह फैशन श्रेणी का है और डिलीवरी तिथि से 15 कैलेंडर दिनों का रिटर्न विंडो है।
+
+CONV PC004 t5 [return_eligibility] expected=answer got=answer tools_ok=True
+  missing: 1 ; 3 | forbidden: 
+  tools expected:  | called: 
+  customer: और रिफ़ंड कितने दिन में आएगा?
+  reply: रिफ़ंड आपके रिटर्न पिक‑अप के बाद 2 कार्य दिवसों के भीतर शुरू किया जाएगा, उसके बाद ज़ेंट्रोमार्ट की सामान्य रिफ़ंड प्रक्रिया के अनुसार आपके खाते में पहुँच जाएगा।
+
+Q PQ0002 [warranty] expected=answer got=answer
+  missing: 12 | forbidden: 
+  chunks: products.csv:ELE-0012 ; WAR-1 ; RET-1 ; MKS-2 ; DWM-4 ; TRB-4 ; WAR-2 ; RET-7 ; PLS-2 ; KB-00.1 ; KB-00.3
+  reply: Main ZentroMart ki AI support assistant hoon. Yes, the Kestrel K7 Smartphone (SKU ELE-0012) is ZentroMart Assured. To claim, open the app, go to My Orders, select the item and raise a ZentroMart Assured claim – we’ll arrange pickup and repair or replacement.
+
+Q PQ0005 [warranty] expected=answer got=answer
+  missing: 12 | forbidden: 
+  chunks: products.csv:ELE-0002 ; WAR-1 ; RET-1 ; MKS-2 ; TRB-4 ; WAR-2 ; DWM-3 ; PLS-2 ; MKS-3 ; KB-00.1
+  reply: Main ZentroMart ki AI support assistant hoon. Yes, the Nimbus X2 Wireless Earbuds (SKU ELE-0002) are ZentroMart Assured. To claim, open the app, go to My Orders, select the item and raise a ZentroMart Assured claim; we’ll arrange pickup and repair or replaceme
