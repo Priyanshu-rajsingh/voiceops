@@ -1,0 +1,38 @@
+{
+  "file": "audio3.mp3",
+  "conversation_id": "",
+  "transcript": "how long does a refund take after i return an item",
+  "stt_language": "en-IN",
+  "language": "en",
+  "decision": "clarify",
+  "reply_text": "Sorry, I'm having trouble right now. Could you please try again in a moment?",
+  "chunks_used": [
+    "REF-2",
+    "RET-7",
+    "REF-4",
+    "PLS-2",
+    "REF-1",
+    "DWM-4",
+    "CAN-2",
+    "DWM-2",
+    "KB-00.3"
+  ],
+  "cited_sections": [],
+  "tool_calls": [],
+  "ticket_id": null,
+  "audio_file": "audio3_reply.wav",
+  "error": "HTTP 429 from groq: {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k3ehyg35em8vt7fp1x6ks2q7` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 197753, Requested 3526. Please try again in 9m12.528s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing\",\"type\":\"tokens\",\"code\":\"rate_limit_exceeded\"}}\n",
+  "retrieved": [
+    "REF-2",
+    "RET-7",
+    "REF-4",
+    "PLS-2",
+    "REF-1",
+    "DWM-4",
+    "CAN-2",
+    "DWM-2"
+  ],
+  "search_query": "refund timeline after returning an item refund timeline return processing time payment method policy refund period return window",
+  "spoken_text": "Sorry, I'm having trouble right now. Could you please try again in a moment?",
+  "seconds": 1300.45
+}

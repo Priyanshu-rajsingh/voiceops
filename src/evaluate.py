@@ -22,7 +22,7 @@ from pathlib import Path
 from . import config, scoring
 from .agent import SupportAgent
 from .kb import KnowledgeBase
-from .llm import LLM
+from .llm import LLM, DailyLimitError
 
 OUT = config.REPO_ROOT / "eval_out"
 
@@ -163,7 +163,8 @@ def main() -> None:
     ap.add_argument("--steps", nargs="*", default=["1", "2", "3", "conv"], choices=["1", "2", "3", "conv"])
     ap.add_argument("--retrieval-only", action="store_true")
     ap.add_argument("--asr", action="store_true", help="use asr_text instead of question")
-    ap.add_argument("--limit", type=int)
+    ap.add_argument("--limit", type=int, help="only the first N practice questions")
+    ap.add_argument("--conv-limit", type=int, help="only the first N conversations (default: same as --limit)")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--dataset")
     args = ap.parse_args()
@@ -188,12 +189,19 @@ def main() -> None:
     plan = {"1": ("baseline", "step1"), "2": ("rag", "step2"), "3": ("full", "step3_questions")}
     for step in args.steps:
         t0 = time.time()
-        if step == "conv":
-            rows, summ = run_conversations(kb, llm, args.limit, args.workers)
-            name = "conversations"
-        else:
-            mode, name = plan[step]
-            rows, summ = run_questions(mode, kb, llm, col, args.limit, args.workers)
+        try:
+            if step == "conv":
+                rows, summ = run_conversations(kb, llm, args.conv_limit or args.limit, args.workers)
+                name = "conversations"
+            else:
+                mode, name = plan[step]
+                rows, summ = run_questions(mode, kb, llm, col, args.limit, args.workers)
+        except DailyLimitError as e:
+            left = " ".join(args.steps[args.steps.index(step):])
+            print(f"\nSTOPPED at step {step}: your LLM provider's DAILY token limit is used up.\n  {str(e)[:260]}\n"
+                  f"Nothing was saved for this step. Wait until the limit resets (see 'try again in ...'), or switch "
+                  f"LLM_MODEL in .env, then continue with:\n  python -m src.evaluate --steps {left} --limit {args.limit or 52}")
+            return
         summ["seconds"] = round(time.time() - t0, 1)
         summary[name] = summ
         _write(OUT / f"{name}.csv", [{k: v for k, v in r.items() if not k.startswith("_")} for r in rows])

@@ -1,0 +1,40 @@
+{
+  "file": "audio2.mp3",
+  "conversation_id": "",
+  "transcript": "can i get ₹500 compensation right now",
+  "stt_language": "en-IN",
+  "language": "en",
+  "decision": "refuse",
+  "reply_text": "I'm ZentroMart's AI support assistant. I’m sorry, but we cannot provide a ₹500 compensation. Our policy only credits the express fee for delayed express orders and does not offer other compensation.",
+  "chunks_used": [
+    "DEL-4",
+    "ESC-4",
+    "CAN-1",
+    "DWM-2",
+    "PAY-4",
+    "CAN-2",
+    "REF-6",
+    "IDV-1"
+  ],
+  "cited_sections": [
+    "DEL-4",
+    "ESC-4"
+  ],
+  "tool_calls": [],
+  "ticket_id": null,
+  "audio_file": "audio2_reply.wav",
+  "error": null,
+  "retrieved": [
+    "DEL-4",
+    "ESC-4",
+    "CAN-1",
+    "DWM-2",
+    "PAY-4",
+    "CAN-2",
+    "REF-6",
+    "IDV-1"
+  ],
+  "search_query": "request compensation of ₹500 from ZentroMart policy compensation refund claim policy ₹500 customer satisfaction compensation amount refund policy",
+  "spoken_text": "I'm ZentroMart's AI support assistant. I’m sorry, but we cannot provide a ₹500 compensation. Our policy only credits the express fee for delayed express orders and does not offer other compensation.",
+  "seconds": 278.69
+}

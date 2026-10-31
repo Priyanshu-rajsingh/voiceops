@@ -152,7 +152,7 @@ def get_settings() -> Settings:
         tts_voices={
             "en": os.getenv("TTS_VOICE_EN", "Kaveri"),
             "hi": os.getenv("TTS_VOICE_HI", "Nalini"),
-            "hi-en": os.getenv("TTS_VOICE_HINGLISH", "Poorvi"),
+            "hi-en": os.getenv("TTS_VOICE_HINGLISH", "Nalini"),
             "other": os.getenv("TTS_VOICE_OTHER", "Kaveri"),
         },
         use_dense=os.getenv("USE_DENSE", "auto").lower(),

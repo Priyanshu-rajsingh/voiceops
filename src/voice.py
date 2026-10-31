@@ -65,6 +65,7 @@ class Voice:
         key = os.getenv("GNANI_API_KEY")
         if not key:
             raise RuntimeError("GNANI_API_KEY is not set (see .env.example).")
+        self.last_error: str | None = None
         self.stt = GnaniSTTClient()  # reads GNANI_API_KEY from the environment
         self.tts = GnaniTTSClient()
 
@@ -135,17 +136,25 @@ class Voice:
         return os.getenv("TTS_OTHER_MODEL", "timbre-v3.0"), os.getenv("TTS_VOICE_OTHER", "Shivani"), code
 
     def speak(self, text: str, lang: str, out_path: str | os.PathLike) -> bool:
-        model, voice, code = self.tts_params(lang)
+        """Speak `text`; if the preferred voice/language is rejected, fall back to safer ones."""
         out = str(out_path)
-        for attempt in range(3):
-            try:
-                audio = self.tts.synthesize(text, voice=voice, model=model, language=code, output_file=out)
-                if isinstance(audio, (bytes, bytearray)) and (not os.path.exists(out) or os.path.getsize(out) == 0):
-                    Path(out).write_bytes(bytes(audio))
-                if os.path.exists(out) and os.path.getsize(out) > 0:
-                    return True
-            except Exception:
-                time.sleep(1.5 * (attempt + 1))
+        lang_l = (lang or "en").lower()
+        plan = [self.tts_params(lang_l)]
+        if lang_l in ("hi", "hi-en"):
+            plan.append((self.s.tts_model, self.s.tts_voices["hi"], "hi-IN"))
+        plan.append((self.s.tts_model, self.s.tts_voices["en"], "en-IN"))
+        self.last_error = None
+        for model, voice, code in dict.fromkeys(plan):
+            for attempt in range(2):
+                try:
+                    audio = self.tts.synthesize(text, voice=voice, model=model, language=code, output_file=out)
+                    if isinstance(audio, (bytes, bytearray)) and (not os.path.exists(out) or os.path.getsize(out) == 0):
+                        Path(out).write_bytes(bytes(audio))
+                    if os.path.exists(out) and os.path.getsize(out) > 0:
+                        return True
+                except Exception as e:
+                    self.last_error = f"{voice}/{code}: {type(e).__name__}: {str(e)[:160]}"
+                    time.sleep(1.0)
         return False
 
 

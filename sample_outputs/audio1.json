@@ -1,0 +1,39 @@
+{
+  "file": "audio1.mp3",
+  "conversation_id": "",
+  "transcript": "mera order abhi tak nahi aaya kya mein cancel kar sakta hoon",
+  "stt_language": "en-IN",
+  "language": "hi-en",
+  "decision": "clarify",
+  "reply_text": "Main ZentroMart ki AI support assistant hoon. Sure, could you please share your order ID?",
+  "chunks_used": [
+    "CAN-1",
+    "CAN-2",
+    "CAN-4",
+    "CAN-3",
+    "REF-5",
+    "TRK-1",
+    "REF-1",
+    "TRK-2",
+    "KB-00.1",
+    "KB-00.3"
+  ],
+  "cited_sections": [],
+  "tool_calls": [],
+  "ticket_id": null,
+  "audio_file": "",
+  "error": "TTS failed",
+  "retrieved": [
+    "CAN-1",
+    "CAN-2",
+    "CAN-4",
+    "CAN-3",
+    "REF-5",
+    "TRK-1",
+    "REF-1",
+    "TRK-2"
+  ],
+  "search_query": "order not arrived cancellation request policy cancellation order not delivered cancel order return window refund timeline order status reverse pickup cancellation fee",
+  "spoken_text": "Main ZentroMart ki AI support assistant hoon. Sure, could you please share your order ID?",
+  "seconds": 14.29
+}

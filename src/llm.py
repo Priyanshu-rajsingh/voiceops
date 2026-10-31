@@ -19,6 +19,10 @@ class LLMError(RuntimeError):
     pass
 
 
+class DailyLimitError(LLMError):
+    """The provider's per-day token quota is used up: retrying is pointless."""
+
+
 def parse_json(text: str) -> dict:
     """Extract the first JSON object from a model reply (tolerates code fences / chatter)."""
     text = text.strip()
@@ -85,6 +89,8 @@ class LLM:
         for _ in range(2):  # one repair attempt if the model returns malformed JSON
             try:
                 return parse_json(self.chat(system, user, json_mode=True, **kw))
+            except DailyLimitError:
+                raise
             except LLMError as e:
                 last = e
         raise LLMError(str(last))
@@ -105,6 +111,9 @@ class LLM:
             if r.status_code == 200:
                 return r.json()
             body = r.text[:400]
+            flat = re.sub(r"[\s_\-]+", "", r.text.lower())  # "per day", "PerDay", "free-models-per-day" -> "perday"
+            if r.status_code == 429 and ("perday" in flat or "(tpd)" in flat or "daily" in flat):
+                raise DailyLimitError(f"HTTP 429 from {self.provider}: {body}")
             if r.status_code == 400 and attempt < last_attempt:
                 low = body.lower()
                 changed = False

@@ -119,7 +119,7 @@ def main(argv=None) -> int:
         if voice.speak(spoken, rec["language"] or "en", wav):
             rec["audio_file"] = wav.name
         else:
-            rec["error"] = (rec["error"] + "; " if rec["error"] else "") + "TTS failed"
+            rec["error"] = (rec["error"] + "; " if rec["error"] else "") + "TTS failed: " + str(getattr(voice, "last_error", ""))
         rec["spoken_text"] = spoken
         rec["seconds"] = round(time.time() - t0, 2)
         (out_dir / f"{f.stem}.json").write_text(json.dumps(rec, indent=2, ensure_ascii=False), encoding="utf-8")

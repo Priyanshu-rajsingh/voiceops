@@ -93,7 +93,7 @@ def chart(summary: dict, path: Path) -> bool:
     ax.set_xticks(range(len(metrics)))
     ax.set_xticklabels([n for n, _ in metrics], fontsize=7)
     ax.set_ylim(0, 112)
-    ax.set_ylabel("% of 52 practice questions", fontsize=7)
+    ax.set_ylabel("% of practice questions evaluated", fontsize=7)
     ax.tick_params(axis="y", labelsize=6)
     ax.legend(fontsize=6, ncol=3, loc="upper center", frameon=False)
     for s in ("top", "right"):
@@ -190,7 +190,8 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
     s1, s2, s3 = summary.get("step1", {}), summary.get("step2", {}), summary.get("step3_questions", {})
     r2, r3 = s2.get("retrieval", {}), s3.get("retrieval", {})
     k = r2.get("k") or r3.get("k") or meta.get("top_k", "k")
-    rows = [["Metric (52 practice questions)", "Step 1", "Step 2", "Step 3"],
+    nq = s2.get("n") or s1.get("n") or "?"
+    rows = [[f"Metric ({nq} practice questions)", "Step 1", "Step 2", "Step 3"],
             ["Overall pass (right decision + facts + nothing forbidden)", pct(s1.get("pass_rate")), pct(s2.get("pass_rate")), pct(s3.get("pass_rate"))],
             ["Decision matches expected", pct(s1.get("decision_acc")), pct(s2.get("decision_acc")), pct(s3.get("decision_acc"))],
             ["Required facts present", pct(s1.get("fact_rate")), pct(s2.get("fact_rate")), pct(s3.get("fact_rate"))],
@@ -205,6 +206,13 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
                            ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     F.append(t)
     F.append(Spacer(1, 3))
+    cv = summary.get("conversations", {})
+    if (s1.get("n", 52) < 52) or (cv.get("turns", 96) < 96):
+        F.append(Paragraph(
+            f"<b>Scope of this evaluation:</b> my LLM provider's free tier has a daily token limit, so I evaluated the first "
+            f"{s1.get('n', '?')} of the 52 practice questions (the same questions in every step) and the first "
+            f"{cv.get('conversations', '?')} of 23 conversations ({cv.get('turns', '?')} of 96 turns). "
+            "The numbers are indicative, not exact.", small))
     png = ROOT / "eval_out" / "chart.png"
     png.parent.mkdir(exist_ok=True)
     if chart(summary, png):
@@ -230,7 +238,7 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
         F.append(Paragraph(line, bl, bulletText="•"))
     for b in bullets(nt.get("what went wrong and what i would fix", "")):
         F.append(Paragraph(escape(b), bl, bulletText="•"))
-    F.append(Paragraph("Limits of my evaluation: it has 52 questions and 23 conversations; scoring is string matching, so a "
+    F.append(Paragraph(f"Limits of my evaluation: it uses {nq} questions and {cv.get('conversations', '?')} conversations; scoring is string matching, so a "
                        "paraphrased forbidden claim or a correct answer in unexpected wording can be mis-scored; the identity check "
                        "is a synthetic teaching mock, not real authentication.", small))
     bonus = bullets(nt.get("bonus work", ""))
@@ -255,10 +263,10 @@ def main() -> int:
     if not sp.exists():
         sys.exit("No evaluation results found. Run:  python -m src.evaluate   first.")
     s = json.loads(sp.read_text(encoding="utf-8"))
-    missing = [k for k in ("step1", "step2", "step3_questions", "conversations") if k not in s]
+    missing = [k for k in ("step1", "step2", "conversations") if k not in s]
     if missing:
         sys.exit(f"Evaluation results are incomplete (missing: {', '.join(missing)}). Run:  python -m src.evaluate")
-    short = [k for k in ("step1", "step2", "step3_questions") if s[k].get("n", 0) < 52]
+    short = [k for k in ("step1", "step2", "step3_questions") if k in s and s[k].get("n", 0) < 52]
     if s["conversations"].get("turns", 0) < 96:
         short.append("conversations")
     if short and not a.allow_partial:

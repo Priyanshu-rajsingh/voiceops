@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 
 from . import config, dates
 from .kb import KnowledgeBase
-from .llm import LLM, LLMError
+from .llm import LLM, DailyLimitError, LLMError
 from .prompts import ANSWER_SYSTEM, BASELINE_SYSTEM, ROUTER_SYSTEM
 
 DECISIONS = {"answer", "clarify", "escalate", "refuse"}
@@ -178,6 +178,8 @@ class SupportAgent:
                 self._baseline(turn)
             else:
                 self._grounded(turn, channel)
+        except DailyLimitError:
+            raise
         except LLMError as e:
             turn.error = str(e)
             turn.language = detect_language(text)
@@ -262,6 +264,8 @@ class SupportAgent:
                   f"Today is {config.TODAY.isoformat()}.")
         try:
             d = self.llm.chat_json(ROUTER_SYSTEM, prompt, max_tokens=500)
+        except DailyLimitError:
+            raise
         except LLMError:
             d = {}
         r = Route(
