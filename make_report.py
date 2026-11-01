@@ -73,6 +73,8 @@ def pipeline_drawing(width: float) -> Drawing:
 
 
 def chart(summary: dict, path: Path) -> bool:
+    if not any(k in summary for k in ("step1", "step2", "step3_questions")):
+        return False
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -152,9 +154,10 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
     F.append(Paragraph("VoiceOps 2026: ZentroMart voice support agent", h1))
     team_line = " | ".join(l.strip() for l in team.splitlines() if l.strip())
     F.append(Paragraph(escape(team_line), small))
-    F.append(Paragraph(f"LLM: {meta.get('provider', '?')} / {meta.get('model', '?')} | retrievers: "
-                       f"{' + '.join(meta.get('retrievers', []))} | top-k = {meta.get('top_k', '?')} | speech: Gnani STT and TTS only | "
-                       f"dataset date fixed at 20 October 2026", small))
+    llm_line = (f"LLM: {meta.get('provider', '?')} / {meta.get('model', '?')} | retrievers: "
+                f"{' + '.join(meta.get('retrievers', []))} | top-k = {meta.get('top_k', '?')}") if meta else \
+        "LLM evaluation: not completed (free-tier quota), retrieval check only"
+    F.append(Paragraph(f"{llm_line} | speech: Gnani STT and TTS only | dataset date fixed at 20 October 2026", small))
 
     F.append(Paragraph("1. What I built, step by step", h2))
     F.append(pipeline_drawing(W))
@@ -198,6 +201,10 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
             ["No forbidden claim", pct(s1.get("safe_rate")), pct(s2.get("safe_rate")), pct(s3.get("safe_rate"))],
             [f"Retrieval: gold section found in top results (hit@{k})", "n/a", pct(r2.get("hit")), pct(r3.get("hit"))],
             [f"Retrieval: share of gold sections found (recall@{k})", "n/a", pct(r2.get("recall")), pct(r3.get("recall"))]]
+    if not (s1 or s2 or s3):  # no LLM results at all: show the retrieval check that needs no LLM
+        by_k = summary.get("retrieval_offline", {}).get("by_k", {})
+        rows = [["Retrieval check without any LLM (raw customer question)", "hit", "recall", "MRR"]] + [
+            [f"gold section found in the top {kk}", pct(v["hit"]), pct(v["recall"]), pct(v["mrr"])] for kk, v in by_k.items()]
     t = Table(rows, colWidths=[W - 3 * 2.0 * cm, 2.0 * cm, 2.0 * cm, 2.0 * cm])
     t.setStyle(TableStyle([("FONTSIZE", (0, 0), (-1, -1), font - 1), ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#243040")),
                            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white), ("ALIGN", (1, 0), (-1, -1), "CENTER"),
@@ -219,14 +226,20 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
         F.append(Image(str(png), width=W, height=W * 2.3 / 7.2))
     delta = (s2.get("pass_rate", 0) - s1.get("pass_rate", 0)) * 100
     c = summary.get("conversations", {})
-    F.append(Paragraph(
+    narr = (
         f"<b>Step 2 vs Step 1:</b> grounding the model in the documents changed the overall pass rate from {pct(s1.get('pass_rate'))} "
         f"to {pct(s2.get('pass_rate'))} ({delta:+.0f} points). "
         + (f"<b>Conversations</b> ({c.get('conversations', '?')} dialogues, {c.get('turns', '?')} turns): "
            f"{pct(c.get('turn_pass_rate'))} of turns pass, {pct(c.get('conversation_pass_rate'))} of whole conversations pass, "
            f"decision accuracy {pct(c.get('decision_acc'))}, expected tool calls made correctly {pct(c.get('tool_acc'))}. " if c else "")
         + "A question passes only if the decision is acceptable, every required fact appears (dates, numbers and Hindi digits "
-        "accepted in any equivalent form) and no forbidden phrase appears.", body))
+        "accepted in any equivalent form) and no forbidden phrase appears.")
+    fallback = ("<b>LLM evaluation not completed.</b> My free-tier LLM quota ran out before I could run Step 1 (prompt only) and "
+                "Step 2 (with documents) on the practice questions, so I do not report a Step 1 vs Step 2 score and I do not "
+                "estimate one. The only measured result is the retrieval check above, which needs no LLM: it searches the "
+                "documents with the raw customer question and counts how often a gold section appears in the top results. "
+                "The LLM's query rewrite should improve on this, but I have not measured that.")
+    F.append(Paragraph(narr if (s1 and s2) else fallback, body))
     off = summary.get("retrieval_offline", {}).get("by_k", {}).get(str(k))
     if off and r2:
         F.append(Paragraph(f"<b>Effect of the LLM query rewrite on retrieval:</b> searching with the raw customer text alone finds a gold "
@@ -238,9 +251,10 @@ def build(summary_path: Path, notes_path: Path, out: Path, allow_placeholders: b
         F.append(Paragraph(line, bl, bulletText="•"))
     for b in bullets(nt.get("what went wrong and what i would fix", "")):
         F.append(Paragraph(escape(b), bl, bulletText="•"))
-    F.append(Paragraph(f"Limits of my evaluation: it uses {nq} questions and {cv.get('conversations', '?')} conversations; scoring is string matching, so a "
-                       "paraphrased forbidden claim or a correct answer in unexpected wording can be mis-scored; the identity check "
-                       "is a synthetic teaching mock, not real authentication.", small))
+    lim = (f"it uses {nq} questions and {cv.get('conversations', '?')} conversations; scoring is string matching, so a "
+           "paraphrased forbidden claim or a correct answer in unexpected wording can be mis-scored; ") if (s1 and s2) else \
+        "no LLM results are included, and the retrieval check uses string matching on section IDs; "
+    F.append(Paragraph("Limits of my evaluation: " + lim + "the identity check is a synthetic teaching mock, not real authentication.", small))
     bonus = bullets(nt.get("bonus work", ""))
     if bonus and not (len(bonus) == 1 and bonus[0].lower().startswith("none")):
         F.append(Paragraph("4. Bonus work", h2))
@@ -264,10 +278,12 @@ def main() -> int:
         sys.exit("No evaluation results found. Run:  python -m src.evaluate   first.")
     s = json.loads(sp.read_text(encoding="utf-8"))
     missing = [k for k in ("step1", "step2", "conversations") if k not in s]
+    if a.allow_partial:  # draft/fallback: anything measured is better than nothing, but never invented
+        missing = [] if any(k in s for k in ("step1", "step2", "conversations", "retrieval_offline")) else ["any results"]
     if missing:
         sys.exit(f"Evaluation results are incomplete (missing: {', '.join(missing)}). Run:  python -m src.evaluate")
     short = [k for k in ("step1", "step2", "step3_questions") if k in s and s[k].get("n", 0) < 52]
-    if s["conversations"].get("turns", 0) < 96:
+    if "conversations" in s and s["conversations"].get("turns", 0) < 96:
         short.append("conversations")
     if short and not a.allow_partial:
         sys.exit("These results come from a partial run (" + ", ".join(short) + "): the practice set has 52 questions and "

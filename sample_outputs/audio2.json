@@ -4,37 +4,14 @@
   "transcript": "can i get ₹500 compensation right now",
   "stt_language": "en-IN",
   "language": "en",
-  "decision": "refuse",
-  "reply_text": "I'm ZentroMart's AI support assistant. I’m sorry, but we cannot provide a ₹500 compensation. Our policy only credits the express fee for delayed express orders and does not offer other compensation.",
-  "chunks_used": [
-    "DEL-4",
-    "ESC-4",
-    "CAN-1",
-    "DWM-2",
-    "PAY-4",
-    "CAN-2",
-    "REF-6",
-    "IDV-1"
-  ],
-  "cited_sections": [
-    "DEL-4",
-    "ESC-4"
-  ],
+  "decision": "clarify",
+  "reply_text": "Sorry, I didn't catch that. Could you please say it again?",
+  "chunks_used": [],
+  "cited_sections": [],
   "tool_calls": [],
   "ticket_id": null,
   "audio_file": "audio2_reply.wav",
-  "error": null,
-  "retrieved": [
-    "DEL-4",
-    "ESC-4",
-    "CAN-1",
-    "DWM-2",
-    "PAY-4",
-    "CAN-2",
-    "REF-6",
-    "IDV-1"
-  ],
-  "search_query": "request compensation of ₹500 from ZentroMart policy compensation refund claim policy ₹500 customer satisfaction compensation amount refund policy",
-  "spoken_text": "I'm ZentroMart's AI support assistant. I’m sorry, but we cannot provide a ₹500 compensation. Our policy only credits the express fee for delayed express orders and does not offer other compensation.",
-  "seconds": 278.69
+  "error": "DailyLimitError: HTTP 429 from gemini: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20",
+  "spoken_text": "Sorry, I didn't catch that. Could you please say it again?",
+  "seconds": 5.81
 }

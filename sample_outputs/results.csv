@@ -1,0 +1,13 @@
+file,transcript,language,decision,reply_text,chunks_used,tool_calls,ticket_id,audio_file,seconds,error
+audio1.mp3,mera order abhi tak nahi aaya kya mein cancel kar sakta hoon,en,clarify,"Sorry, I didn't catch that. Could you please say it again?",,,,audio1_reply.wav,5.99,"DailyLimitError: HTTP 429 from gemini: [{
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20"
+audio2.mp3,can i get ₹500 compensation right now,en,clarify,"Sorry, I didn't catch that. Could you please say it again?",,,,audio2_reply.wav,5.81,"DailyLimitError: HTTP 429 from gemini: [{
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20"
+audio3.mp3,how long does a refund take after i return an item,en,clarify,"Sorry, I didn't catch that. Could you please say it again?",,,,audio3_reply.wav,5.64,"DailyLimitError: HTTP 429 from gemini: [{
+  ""error"": {
+    ""code"": 429,
+    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20"

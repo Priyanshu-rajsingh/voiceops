@@ -214,5 +214,38 @@
     },
     "errors": 0,
     "seconds": 686.8
+  },
+  "retrieval_offline": {
+    "retrievers": [
+      "bm25",
+      "tfidf"
+    ],
+    "query": "raw customer text (no LLM rewrite)",
+    "by_k": {
+      "4": {
+        "k": 4,
+        "n": 47,
+        "recall": 0.7199,
+        "hit": 0.8936,
+        "mrr": 0.6188,
+        "hard_negative_first": 0.0
+      },
+      "6": {
+        "k": 6,
+        "n": 47,
+        "recall": 0.7411,
+        "hit": 0.9149,
+        "mrr": 0.6223,
+        "hard_negative_first": 0.0
+      },
+      "8": {
+        "k": 8,
+        "n": 47,
+        "recall": 0.8085,
+        "hit": 0.9362,
+        "mrr": 0.6254,
+        "hard_negative_first": 0.0
+      }
+    }
   }
 }
